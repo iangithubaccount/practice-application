@@ -8,15 +8,15 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const mongoose = require('mongoose');
 
-mongoose.connect(DATABASE_URL);
 mongoose.set('strictQuery', true);
+mongoose.connect(DATABASE_URL);
 
 app.set('views', path.join(__dirname, '/app/views/pages'))
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(session({ secret: "yo", saveUninitialized: true, cookie: { maxAge: 86400000 }, resave: false }));
+app.use(session({ secret: "yo", saveUninitialized: true, cookie: { maxAge: 1000 }, resave: false }));
 app.use('/public', express.static(path.join(__dirname, 'app/public')));
 
 app.get('/', (req, res) => {
@@ -24,6 +24,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
+    req.session.destroy();
     res.render('login');
 });
 
